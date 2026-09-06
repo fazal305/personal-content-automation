@@ -1,0 +1,25 @@
+node_modules/
+dist/
+build/
+
+# environment / secrets
+.env
+.env.local
+
+# runtime data — never commit real personal content or tokens
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+logs/
+tokens/
+uploads/
+private/
+
+# local dev tooling
+.claude/
+
+# editor / os
+.DS_Store
+Thumbs.db
+*.log
