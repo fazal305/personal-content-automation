@@ -24,7 +24,28 @@ miscRouter.get('/platforms', (req, res) => {
 
 miscRouter.get('/events', (req, res) => {
   const limit = Math.min(Number(req.query.limit) || 50, 200);
-  res.json(db.prepare('SELECT * FROM automation_events ORDER BY created_at DESC LIMIT ?').all(limit));
+  const { event_type, severity, entity_type } = req.query;
+  let sql = `SELECT * FROM automation_events WHERE 1=1`;
+  const params = [];
+  if (event_type) {
+    sql += ` AND event_type = ?`;
+    params.push(event_type);
+  }
+  if (severity) {
+    sql += ` AND severity = ?`;
+    params.push(severity);
+  }
+  if (entity_type) {
+    sql += ` AND entity_type = ?`;
+    params.push(entity_type);
+  }
+  sql += ` ORDER BY created_at DESC LIMIT ?`;
+  params.push(limit);
+  res.json(db.prepare(sql).all(...params));
+});
+
+miscRouter.get('/events/types', (req, res) => {
+  res.json(db.prepare('SELECT DISTINCT event_type FROM automation_events ORDER BY event_type').all().map((r) => r.event_type));
 });
 
 miscRouter.get('/config', (req, res) => {

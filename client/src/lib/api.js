@@ -28,7 +28,11 @@ export const api = {
   pillars: () => request('/pillars'),
   createPillar: (data) => request('/pillars', { method: 'POST', body: JSON.stringify(data) }),
   tags: () => request('/tags'),
-  events: (limit = 20) => request(`/events?limit=${limit}`),
+  events: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/events${qs ? `?${qs}` : ''}`);
+  },
+  eventTypes: () => request('/events/types'),
   config: () => request('/config'),
   calendar: (params = {}) => {
     const qs = new URLSearchParams(params).toString();
@@ -38,4 +42,6 @@ export const api = {
   cancelSchedule: (jobId) => request(`/schedule/${jobId}`, { method: 'DELETE' }),
   runAutomation: () => request('/automation/run', { method: 'POST' }),
   automationStatus: () => request('/automation/status'),
+  automationRules: () => request('/automation/rules'),
+  toggleRule: (id, enabled) => request(`/automation/rules/${id}`, { method: 'PATCH', body: JSON.stringify({ enabled }) }),
 };

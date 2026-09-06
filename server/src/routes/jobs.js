@@ -79,3 +79,17 @@ jobsRouter.post('/automation/run', async (req, res) => {
 jobsRouter.get('/automation/status', (req, res) => {
   res.json(getSchedulerStatus());
 });
+
+jobsRouter.get('/automation/rules', (req, res) => {
+  res.json(db.prepare('SELECT * FROM automation_rules ORDER BY id').all());
+});
+
+jobsRouter.patch('/automation/rules/:id', (req, res) => {
+  const rule = db.prepare('SELECT * FROM automation_rules WHERE id = ?').get(req.params.id);
+  if (!rule) return res.status(404).json({ error: 'not_found' });
+  if (req.body.enabled === undefined) return res.json(rule);
+
+  db.prepare('UPDATE automation_rules SET enabled = ? WHERE id = ?').run(req.body.enabled ? 1 : 0, req.params.id);
+  logEvent({ event_type: 'AUTOMATION_RULE_TOGGLED', entity_type: 'rule', entity_id: rule.id, message: `${rule.name}: ${req.body.enabled ? 'enabled' : 'disabled'}` });
+  res.json(db.prepare('SELECT * FROM automation_rules WHERE id = ?').get(req.params.id));
+});

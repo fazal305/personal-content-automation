@@ -1,5 +1,6 @@
 import { db, logEvent } from '../db/index.js';
 import { attemptPublish } from './publish.js';
+import { runRulesForTrigger, evaluatePollableRules } from './rules.js';
 
 const RETRY_BACKOFF_MINUTES = [2, 10, 30]; // by retry_count
 
@@ -49,7 +50,7 @@ async function processJob(job) {
       entity_id: job.id,
       message: `${content.title} -> ${platform.display_name}${result.simulated ? ' (simulated)' : ''}`,
     });
-    logEvent({ event_type: 'ANALYTICS_SYNC_QUEUED', entity_type: 'content', entity_id: content.id, message: platform.supports_analytics ? 'queued' : 'skipped — platform has no analytics API' });
+    runRulesForTrigger('content_published', { content, platform });
   } else {
     const nextRetry = job.retry_count + 1;
     if (nextRetry <= job.max_retries) {
@@ -77,6 +78,7 @@ export async function runSchedulerTick() {
     await processJob(job);
     processed.push(job.id);
   }
+  evaluatePollableRules();
   lastTickAt = new Date().toISOString();
   lastTickResult = { processed: processed.length };
   return lastTickResult;

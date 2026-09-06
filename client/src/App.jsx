@@ -6,6 +6,7 @@ import Ideas from './pages/Ideas.jsx';
 import Library from './pages/Library.jsx';
 import ContentEditor from './pages/ContentEditor.jsx';
 import CalendarPage from './pages/Calendar.jsx';
+import Automation from './pages/Automation.jsx';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="content/new" element={<ContentEditor />} />
         <Route path="content/:id" element={<ContentEditor />} />
         <Route path="calendar" element={<CalendarPage />} />
+        <Route path="automation" element={<Automation />} />
         <Route
           path="analytics"
           element={<ComingSoon title="Analytics" phase="Phase 7 — Analytics" description="Real metrics from connected platforms only — never fabricated." />}

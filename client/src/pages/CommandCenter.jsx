@@ -19,7 +19,7 @@ export default function CommandCenter() {
   const [running, setRunning] = useState(false);
 
   function refresh() {
-    return Promise.all([api.pipelineCounts(), api.platforms(), api.events(8), api.health()])
+    return Promise.all([api.pipelineCounts(), api.platforms(), api.events({ limit: 8 }), api.health()])
       .then(([c, p, e, h]) => {
         setCounts(c);
         setPlatforms(p);

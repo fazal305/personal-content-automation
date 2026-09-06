@@ -5,6 +5,7 @@ const NAV_ITEMS = [
   { to: '/ideas', label: 'Ideas' },
   { to: '/library', label: 'Content Library' },
   { to: '/calendar', label: 'Calendar' },
+  { to: '/automation', label: 'Automation' },
   { to: '/analytics', label: 'Analytics' },
   { to: '/experiments', label: 'Experiment Lab' },
   { to: '/settings', label: 'Settings' },
