@@ -14,6 +14,10 @@ miscRouter.post('/pillars', (req, res) => {
   res.status(201).json(db.prepare('SELECT * FROM content_pillars WHERE id = ?').get(result.lastInsertRowid));
 });
 
+miscRouter.get('/tags', (req, res) => {
+  res.json(db.prepare('SELECT * FROM tags ORDER BY name').all());
+});
+
 miscRouter.get('/platforms', (req, res) => {
   res.json(db.prepare('SELECT * FROM platforms ORDER BY display_name').all());
 });

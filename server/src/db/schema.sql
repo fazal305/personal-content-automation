@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS content (
   cta TEXT,
   hashtags TEXT,
   content_type TEXT,             -- 'text' | 'text+image' | 'video' | 'thread' | 'article'
+  target_platform TEXT,          -- intended platform slug at idea stage, before variants exist
   status TEXT NOT NULL DEFAULT 'idea',
   pillar_id INTEGER REFERENCES content_pillars(id) ON DELETE SET NULL,
   priority TEXT DEFAULT 'normal', -- 'low' | 'normal' | 'high'

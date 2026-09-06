@@ -2,20 +2,19 @@ import { Routes, Route } from 'react-router-dom';
 import NavShell from './components/NavShell.jsx';
 import ComingSoon from './components/ComingSoon.jsx';
 import CommandCenter from './pages/CommandCenter.jsx';
+import Ideas from './pages/Ideas.jsx';
+import Library from './pages/Library.jsx';
+import ContentEditor from './pages/ContentEditor.jsx';
 
 export default function App() {
   return (
     <Routes>
       <Route element={<NavShell />}>
         <Route index element={<CommandCenter />} />
-        <Route
-          path="ideas"
-          element={<ComingSoon title="Ideas" phase="Phase 2 — Content System" description="Fast capture for content ideas: title, hook, category, platform, priority." />}
-        />
-        <Route
-          path="library"
-          element={<ComingSoon title="Content Library" phase="Phase 2 — Content System" description="Search, filter, and browse every idea, draft, and published post." />}
-        />
+        <Route path="ideas" element={<Ideas />} />
+        <Route path="library" element={<Library />} />
+        <Route path="content/new" element={<ContentEditor />} />
+        <Route path="content/:id" element={<ContentEditor />} />
         <Route
           path="calendar"
           element={<ComingSoon title="Calendar" phase="Phase 3 — Calendar + Scheduling" description="Month/week/day views of scheduled and published content." />}

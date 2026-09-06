@@ -20,10 +20,14 @@ export const api = {
     const qs = new URLSearchParams(params).toString();
     return request(`/content${qs ? `?${qs}` : ''}`);
   },
+  getContent: (id) => request(`/content/${id}`),
   createContent: (data) => request('/content', { method: 'POST', body: JSON.stringify(data) }),
   updateContent: (id, data) => request(`/content/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+  deleteContent: (id) => request(`/content/${id}`, { method: 'DELETE' }),
   platforms: () => request('/platforms'),
   pillars: () => request('/pillars'),
+  createPillar: (data) => request('/pillars', { method: 'POST', body: JSON.stringify(data) }),
+  tags: () => request('/tags'),
   events: (limit = 20) => request(`/events?limit=${limit}`),
   config: () => request('/config'),
 };
