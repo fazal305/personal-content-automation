@@ -30,4 +30,12 @@ export const api = {
   tags: () => request('/tags'),
   events: (limit = 20) => request(`/events?limit=${limit}`),
   config: () => request('/config'),
+  calendar: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return request(`/calendar${qs ? `?${qs}` : ''}`);
+  },
+  scheduleContent: (data) => request('/schedule', { method: 'POST', body: JSON.stringify(data) }),
+  cancelSchedule: (jobId) => request(`/schedule/${jobId}`, { method: 'DELETE' }),
+  runAutomation: () => request('/automation/run', { method: 'POST' }),
+  automationStatus: () => request('/automation/status'),
 };

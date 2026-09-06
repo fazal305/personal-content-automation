@@ -5,6 +5,7 @@ import CommandCenter from './pages/CommandCenter.jsx';
 import Ideas from './pages/Ideas.jsx';
 import Library from './pages/Library.jsx';
 import ContentEditor from './pages/ContentEditor.jsx';
+import CalendarPage from './pages/Calendar.jsx';
 
 export default function App() {
   return (
@@ -15,10 +16,7 @@ export default function App() {
         <Route path="library" element={<Library />} />
         <Route path="content/new" element={<ContentEditor />} />
         <Route path="content/:id" element={<ContentEditor />} />
-        <Route
-          path="calendar"
-          element={<ComingSoon title="Calendar" phase="Phase 3 — Calendar + Scheduling" description="Month/week/day views of scheduled and published content." />}
-        />
+        <Route path="calendar" element={<CalendarPage />} />
         <Route
           path="analytics"
           element={<ComingSoon title="Analytics" phase="Phase 7 — Analytics" description="Real metrics from connected platforms only — never fabricated." />}

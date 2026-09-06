@@ -4,6 +4,7 @@ import { api } from '../lib/api';
 import { LIFECYCLE, STATUS_LABEL, CONTENT_TYPES, PRIORITIES } from '../lib/constants';
 import StatusBadge from '../components/StatusBadge';
 import TagInput from '../components/TagInput';
+import ScheduleBox from '../components/ScheduleBox';
 
 const EMPTY = {
   title: '', hook: '', body: '', cta: '', hashtags: '',
@@ -24,24 +25,27 @@ export default function ContentEditor() {
   const [error, setError] = useState(null);
   const [dirty, setDirty] = useState(false);
 
+  function reload() {
+    return api.getContent(id).then((item) => {
+      setForm({
+        ...EMPTY,
+        ...item,
+        pillar_id: item.pillar_id ?? '',
+        tags: (item.tags || []).map((t) => t.name),
+      });
+      setDirty(false);
+      setLoading(false);
+    });
+  }
+
   useEffect(() => {
     api.pillars().then(setPillars).catch(() => {});
     api.platforms().then(setPlatforms).catch(() => {});
     if (!isNew) {
-      api.getContent(id)
-        .then((item) => {
-          setForm({
-            ...EMPTY,
-            ...item,
-            pillar_id: item.pillar_id ?? '',
-            tags: (item.tags || []).map((t) => t.name),
-          });
-          setLoading(false);
-        })
-        .catch((e) => {
-          setError(e.message);
-          setLoading(false);
-        });
+      reload().catch((e) => {
+        setError(e.message);
+        setLoading(false);
+      });
     }
   }, [id, isNew]);
 
@@ -153,6 +157,8 @@ export default function ContentEditor() {
           <option key={p} value={p}>{p} priority</option>
         ))}
       </select>
+
+      {!isNew && <ScheduleBox content={form} onScheduled={reload} />}
 
       <div className="mb-3">
         <TagInput value={form.tags} onChange={(tags) => set('tags', tags)} />

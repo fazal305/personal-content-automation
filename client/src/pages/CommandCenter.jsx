@@ -16,9 +16,10 @@ export default function CommandCenter() {
   const [events, setEvents] = useState([]);
   const [health, setHealth] = useState(null);
   const [error, setError] = useState(null);
+  const [running, setRunning] = useState(false);
 
-  useEffect(() => {
-    Promise.all([api.pipelineCounts(), api.platforms(), api.events(8), api.health()])
+  function refresh() {
+    return Promise.all([api.pipelineCounts(), api.platforms(), api.events(8), api.health()])
       .then(([c, p, e, h]) => {
         setCounts(c);
         setPlatforms(p);
@@ -26,7 +27,21 @@ export default function CommandCenter() {
         setHealth(h);
       })
       .catch((err) => setError(err.message));
+  }
+
+  useEffect(() => {
+    refresh();
   }, []);
+
+  async function handleRunAutomation() {
+    setRunning(true);
+    try {
+      await api.runAutomation();
+      await refresh();
+    } finally {
+      setRunning(false);
+    }
+  }
 
   if (error) {
     return (
@@ -45,11 +60,20 @@ export default function CommandCenter() {
             {health?.demoMode ? 'Demo mode — showing seeded sample content, not a real account.' : 'Live mode'}
           </p>
         </div>
-        {health && (
-          <span className="rounded border border-border bg-surface px-2 py-1 font-mono text-xs text-text-muted">
-            dry_run={String(health.dryRun)}
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {health && (
+            <span className="rounded border border-border bg-surface px-2 py-1 font-mono text-xs text-text-muted">
+              dry_run={String(health.dryRun)}
+            </span>
+          )}
+          <button
+            onClick={handleRunAutomation}
+            disabled={running}
+            className="rounded border border-border bg-surface px-2 py-1 text-xs text-text-muted hover:text-text disabled:opacity-50"
+          >
+            {running ? 'Running…' : 'Run automation now'}
+          </button>
+        </div>
       </header>
 
       <section className="mb-8">
@@ -67,6 +91,14 @@ export default function CommandCenter() {
       <div className="grid grid-cols-2 gap-8">
         <section>
           <h2 className="mb-3 text-sm font-medium text-text-muted">Automation Health</h2>
+          {health?.scheduler && (
+            <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-muted">
+              <span>last tick: {health.scheduler.lastTickAt ? new Date(health.scheduler.lastTickAt).toLocaleTimeString() : 'never'}</span>
+              <span>next job: {health.scheduler.nextScheduledFor ? new Date(health.scheduler.nextScheduledFor).toLocaleString() : 'none'}</span>
+              <span>pending: {health.scheduler.pendingJobs}</span>
+              <span className={health.scheduler.failedJobs > 0 ? 'text-danger' : ''}>failed: {health.scheduler.failedJobs}</span>
+            </div>
+          )}
           <div className="rounded border border-border bg-surface">
             {platforms.map((p) => (
               <div key={p.id} className="flex items-center justify-between border-b border-border px-3 py-2 text-sm last:border-b-0">
