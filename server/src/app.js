@@ -4,6 +4,7 @@ import { healthRouter } from './routes/health.js';
 import { contentRouter } from './routes/content.js';
 import { miscRouter } from './routes/misc.js';
 import { jobsRouter } from './routes/jobs.js';
+import { aiRouter } from './routes/ai.js';
 
 export function createApp() {
   const app = express();
@@ -14,6 +15,7 @@ export function createApp() {
   app.use('/api', contentRouter);
   app.use('/api', miscRouter);
   app.use('/api', jobsRouter);
+  app.use('/api', aiRouter);
 
   app.use((req, res) => res.status(404).json({ error: 'not_found' }));
 

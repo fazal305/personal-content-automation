@@ -5,6 +5,8 @@ import { LIFECYCLE, STATUS_LABEL, CONTENT_TYPES, PRIORITIES } from '../lib/const
 import StatusBadge from '../components/StatusBadge';
 import TagInput from '../components/TagInput';
 import ScheduleBox from '../components/ScheduleBox';
+import AiPanel from '../components/AiPanel';
+import VariantsPanel from '../components/VariantsPanel';
 
 const EMPTY = {
   title: '', hook: '', body: '', cta: '', hashtags: '',
@@ -89,7 +91,10 @@ export default function ContentEditor() {
     <div className="mx-auto max-w-2xl p-8">
       <div className="mb-6 flex items-center justify-between">
         <Link to="/library" className="text-sm text-text-muted hover:text-text">← Back to library</Link>
-        {!isNew && <StatusBadge status={form.status} />}
+        <div className="flex items-center gap-2">
+          {!!form.ai_generated && <span className="text-xs text-text-muted">AI-assisted</span>}
+          {!isNew && <StatusBadge status={form.status} />}
+        </div>
       </div>
 
       <input
@@ -104,6 +109,25 @@ export default function ContentEditor() {
         placeholder="Hook"
         className="mb-3 w-full rounded border border-border bg-surface px-3 py-2 text-sm outline-none focus-visible:border-accent"
       />
+      {!isNew && (
+        <AiPanel
+          content={form}
+          onApplyBody={(text) => set('body', text)}
+          onApplyDraft={(draft) => {
+            setForm((f) => ({
+              ...f,
+              hook: draft.hook || f.hook,
+              body: draft.body || f.body,
+              cta: draft.cta || f.cta,
+              hashtags: draft.hashtags || f.hashtags,
+              ai_generated: 1,
+              status: f.status === 'idea' ? 'draft' : f.status,
+            }));
+            setDirty(true);
+          }}
+        />
+      )}
+
       <textarea
         value={form.body}
         onChange={(e) => set('body', e.target.value)}
@@ -159,6 +183,7 @@ export default function ContentEditor() {
       </select>
 
       {!isNew && <ScheduleBox content={form} onScheduled={reload} />}
+      {!isNew && <VariantsPanel content={form} />}
 
       <div className="mb-3">
         <TagInput value={form.tags} onChange={(tags) => set('tags', tags)} />

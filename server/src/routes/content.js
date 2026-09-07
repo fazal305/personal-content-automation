@@ -97,7 +97,7 @@ contentRouter.patch('/content/:id', (req, res) => {
   const existing = db.prepare('SELECT * FROM content WHERE id = ?').get(req.params.id);
   if (!existing) return res.status(404).json({ error: 'not_found' });
 
-  const editableFields = [...FIELDS, 'status'];
+  const editableFields = [...FIELDS, 'status', 'ai_generated'];
   const updates = [];
   const params = [];
   for (const f of editableFields) {
@@ -125,5 +125,38 @@ contentRouter.patch('/content/:id', (req, res) => {
 
 contentRouter.delete('/content/:id', (req, res) => {
   db.prepare('DELETE FROM content WHERE id = ?').run(req.params.id);
+  res.status(204).end();
+});
+
+// Platform-specific versions of one master content item (Module: Content Editor / Variants).
+contentRouter.get('/content/:id/variants', (req, res) => {
+  const rows = db.prepare(`
+    SELECT v.*, p.slug AS platform_slug, p.display_name AS platform_name
+    FROM content_variants v JOIN platforms p ON p.id = v.platform_id
+    WHERE v.content_id = ?
+    ORDER BY p.display_name
+  `).all(req.params.id);
+  res.json(rows);
+});
+
+contentRouter.put('/content/:id/variants/:platformId', (req, res) => {
+  const { body, hashtags } = req.body;
+  if (!body) return res.status(400).json({ error: 'body_required' });
+
+  db.prepare(`
+    INSERT INTO content_variants (content_id, platform_id, body, hashtags)
+    VALUES (?, ?, ?, ?)
+    ON CONFLICT(content_id, platform_id) DO UPDATE SET body = excluded.body, hashtags = excluded.hashtags, updated_at = datetime('now')
+  `).run(req.params.id, req.params.platformId, body, hashtags ?? null);
+
+  res.json(db.prepare(`
+    SELECT v.*, p.slug AS platform_slug, p.display_name AS platform_name
+    FROM content_variants v JOIN platforms p ON p.id = v.platform_id
+    WHERE v.content_id = ? AND v.platform_id = ?
+  `).get(req.params.id, req.params.platformId));
+});
+
+contentRouter.delete('/content/:id/variants/:platformId', (req, res) => {
+  db.prepare(`DELETE FROM content_variants WHERE content_id = ? AND platform_id = ?`).run(req.params.id, req.params.platformId);
   res.status(204).end();
 });

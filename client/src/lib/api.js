@@ -46,4 +46,12 @@ export const api = {
   automationStatus: () => request('/automation/status'),
   automationRules: () => request('/automation/rules'),
   toggleRule: (id, enabled) => request(`/automation/rules/${id}`, { method: 'PATCH', body: JSON.stringify({ enabled }) }),
+  aiStatus: () => request('/ai/status'),
+  aiGenerateDraft: (content_id) => request('/ai/generate-draft', { method: 'POST', body: JSON.stringify({ content_id }) }),
+  aiRewrite: (content_id, mode) => request('/ai/rewrite', { method: 'POST', body: JSON.stringify({ content_id, mode }) }),
+  aiRepurpose: (content_id, platform_id) => request('/ai/repurpose', { method: 'POST', body: JSON.stringify({ content_id, platform_id }) }),
+  aiQualityCheck: (content_id) => request('/ai/quality-check', { method: 'POST', body: JSON.stringify({ content_id }) }),
+  variants: (contentId) => request(`/content/${contentId}/variants`),
+  saveVariant: (contentId, platformId, data) => request(`/content/${contentId}/variants/${platformId}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteVariant: (contentId, platformId) => request(`/content/${contentId}/variants/${platformId}`, { method: 'DELETE' }),
 };
