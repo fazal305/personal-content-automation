@@ -104,7 +104,7 @@ export default function CommandCenter() {
               <div key={p.id} className="flex items-center justify-between border-b border-border px-3 py-2 text-sm last:border-b-0">
                 <span>{p.display_name}</span>
                 <span className="flex items-center gap-2 text-xs text-text-muted">
-                  {p.supports_publishing ? 'real automation' : 'manual-assist'}
+                  {p.slug === 'github' ? 'trigger source' : p.supports_publishing ? 'real automation' : 'manual-assist'}
                   <StatusDot status={p.connection_status} />
                 </span>
               </div>

@@ -4,9 +4,15 @@
 // external API is ever called. This is Module: Test Mode / Dry Run, applied honestly
 // rather than faked as a real publish.
 import { logEvent } from '../db/index.js';
+import { mastodonAdapter } from '../adapters/mastodon.js';
+import { blueskyAdapter } from '../adapters/bluesky.js';
 
-// Populated by adapters as they're built in Phase 5. slug -> { publish(content, variant) }
-export const ADAPTERS = {};
+// Real, testable publish targets. LinkedIn/Instagram stay out of this registry on
+// purpose — see docs/api-research.md for why they're manual-assist here instead.
+export const ADAPTERS = {
+  mastodon: mastodonAdapter,
+  bluesky: blueskyAdapter,
+};
 
 export async function attemptPublish({ job, content, platform }) {
   const isDryRun = job.dry_run === 1 || !ADAPTERS[platform.slug];

@@ -3,8 +3,9 @@
 // (automation_rules table), not code, so adding one doesn't require a deploy.
 import { db, logEvent } from '../db/index.js';
 
-// Triggers this build can actually evaluate. 'github_release' is intentionally
-// absent — it needs the GitHub adapter (Phase 5) and would be a fake button otherwise.
+// Triggers evaluated on the DB-query poll loop. 'github_release' is evaluated
+// separately (jobs/githubWatch.js) since it polls an external API, not the DB —
+// it still respects this same rule's enabled flag before doing anything.
 const POLLABLE_TRIGGERS = ['stale_in_review'];
 
 function runAction(rule, context) {
@@ -32,7 +33,9 @@ function runAction(rule, context) {
       return true;
     }
     case 'create_idea': {
-      // Reserved for the 'github_release' trigger once the GitHub adapter exists (Phase 5/10).
+      // Not dispatched from here — jobs/githubWatch.js handles this action directly
+      // since creating the idea and recording the idempotency ledger entry must be
+      // one atomic step. This case exists so the action_type is self-documenting.
       return false;
     }
     default:
@@ -101,12 +104,12 @@ const DEFAULT_RULES = [
     enabled: 1,
   },
   {
-    name: 'GitHub release -> content idea (requires GitHub adapter, Phase 5)',
+    name: 'GitHub release -> content idea',
     trigger_type: 'github_release',
     condition_json: null,
     action_type: 'create_idea',
     action_json: null,
-    enabled: 0,
+    enabled: 1, // no-ops safely until GITHUB_USERNAME is set — see Settings
   },
 ];
 

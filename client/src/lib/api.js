@@ -34,6 +34,8 @@ export const api = {
   },
   eventTypes: () => request('/events/types'),
   config: () => request('/config'),
+  updateConfig: (data) => request('/config', { method: 'PATCH', body: JSON.stringify(data) }),
+  testConnection: (slug) => request(`/platforms/${slug}/test-connection`, { method: 'POST' }),
   calendar: (params = {}) => {
     const qs = new URLSearchParams(params).toString();
     return request(`/calendar${qs ? `?${qs}` : ''}`);

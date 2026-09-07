@@ -177,6 +177,17 @@ CREATE TABLE IF NOT EXISTS experiments (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+-- Idempotency ledger for externally-triggered automation (e.g. polling GitHub for
+-- new releases). Prevents the same external event from ever creating content twice,
+-- even if a poll overlaps or the process restarts mid-poll.
+CREATE TABLE IF NOT EXISTS processed_external_events (
+  source TEXT NOT NULL,
+  external_id TEXT NOT NULL,
+  content_id INTEGER REFERENCES content(id) ON DELETE SET NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (source, external_id)
+);
+
 CREATE INDEX IF NOT EXISTS idx_content_status ON content(status);
 CREATE INDEX IF NOT EXISTS idx_content_pillar ON content(pillar_id);
 CREATE INDEX IF NOT EXISTS idx_jobs_status ON scheduled_jobs(status);

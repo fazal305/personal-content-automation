@@ -1,7 +1,11 @@
 import { Router } from 'express';
-import { db } from '../db/index.js';
+import { db, logEvent } from '../db/index.js';
+import { ADAPTERS } from '../jobs/publish.js';
+import * as githubAdapter from '../adapters/github.js';
 
 export const miscRouter = Router();
+
+const CONNECTION_TESTERS = { ...ADAPTERS, github: githubAdapter };
 
 miscRouter.get('/pillars', (req, res) => {
   res.json(db.prepare('SELECT * FROM content_pillars ORDER BY name').all());
@@ -20,6 +24,30 @@ miscRouter.get('/tags', (req, res) => {
 
 miscRouter.get('/platforms', (req, res) => {
   res.json(db.prepare('SELECT * FROM platforms ORDER BY display_name').all());
+});
+
+miscRouter.post('/platforms/:slug/test-connection', async (req, res) => {
+  const platform = db.prepare('SELECT * FROM platforms WHERE slug = ?').get(req.params.slug);
+  if (!platform) return res.status(404).json({ error: 'not_found' });
+
+  const tester = CONNECTION_TESTERS[req.params.slug];
+  if (!tester?.testConnection) {
+    return res.status(400).json({ error: 'not_supported', message: 'This platform is manual-assist only — there is no API connection to test.' });
+  }
+
+  const result = await tester.testConnection();
+  // "not set" means unconfigured (expected on a fresh clone), not a broken connection —
+  // only a real failed attempt should show as an error state.
+  const status = result.connected ? 'connected' : /not set/.test(result.reason ?? '') ? 'disconnected' : 'error';
+  db.prepare(`UPDATE platforms SET connection_status = ?, last_checked_at = datetime('now') WHERE id = ?`)
+    .run(status, platform.id);
+  logEvent({
+    event_type: 'PLATFORM_CONNECTION_TESTED',
+    entity_type: 'platform',
+    entity_id: platform.id,
+    message: `${platform.display_name}: ${result.connected ? `connected as ${result.account}` : result.reason}`,
+  });
+  res.json(result);
 });
 
 miscRouter.get('/events', (req, res) => {

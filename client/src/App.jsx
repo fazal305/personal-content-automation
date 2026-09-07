@@ -7,6 +7,7 @@ import Library from './pages/Library.jsx';
 import ContentEditor from './pages/ContentEditor.jsx';
 import CalendarPage from './pages/Calendar.jsx';
 import Automation from './pages/Automation.jsx';
+import Settings from './pages/Settings.jsx';
 
 export default function App() {
   return (
@@ -27,10 +28,7 @@ export default function App() {
           path="experiments"
           element={<ComingSoon title="Experiment Lab" phase="Phase 9 — Experiment Lab" description="Documented automation experiments: trigger, input, processing, output, learnings." />}
         />
-        <Route
-          path="settings"
-          element={<ComingSoon title="Settings" phase="Phase 1 (this one) / Phase 5" description="Brand voice, content pillars, and platform connections." />}
-        />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );
