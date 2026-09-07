@@ -2,6 +2,7 @@ import { db, logEvent } from '../db/index.js';
 import { attemptPublish } from './publish.js';
 import { runRulesForTrigger, evaluatePollableRules } from './rules.js';
 import { pollGithubReleases } from './githubWatch.js';
+import { syncAnalytics } from './analyticsSync.js';
 
 const RETRY_BACKOFF_MINUTES = [2, 10, 30]; // by retry_count
 
@@ -81,6 +82,7 @@ export async function runSchedulerTick() {
   }
   evaluatePollableRules();
   await pollGithubReleases().catch(() => {}); // failures already logged inside; never let this break the tick
+  await syncAnalytics().catch(() => {});
   lastTickAt = new Date().toISOString();
   lastTickResult = { processed: processed.length };
   return lastTickResult;

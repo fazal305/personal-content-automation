@@ -54,4 +54,6 @@ export const api = {
   variants: (contentId) => request(`/content/${contentId}/variants`),
   saveVariant: (contentId, platformId, data) => request(`/content/${contentId}/variants/${platformId}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteVariant: (contentId, platformId) => request(`/content/${contentId}/variants/${platformId}`, { method: 'DELETE' }),
+  analyticsOverview: () => request('/analytics/overview'),
+  contentAnalytics: (contentId) => request(`/analytics/content/${contentId}`),
 };
