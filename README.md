@@ -114,13 +114,6 @@ Full reasoning, including what was researched and rejected, in
 - **Scheduler**: a single `setInterval` tick, no cron/queue dependency
 - **AI**: Anthropic Claude API (optional, `fetch`-based, no SDK dependency)
 
-## Screenshots
-
-Not included in this repo — run it locally (`npm run dev:client` +
-`npm run dev:server`, demo mode is on by default) to see it live in under a
-minute. Every page works against seeded `[DEMO]`-labeled data with zero
-account setup.
-
 ## Demo
 
 The app ships in demo mode by default (`DEMO_MODE=true` in
