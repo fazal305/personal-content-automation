@@ -70,7 +70,7 @@ export default function ScheduleBox({ content, onScheduled }) {
     <div className="mb-4 rounded border border-border bg-surface px-3 py-3">
       <div className="mb-2 text-sm font-medium">Schedule</div>
       <div className="flex flex-wrap items-center gap-2">
-        <select value={platformId} onChange={(e) => setPlatformId(e.target.value)} className="rounded border border-border bg-background px-2 py-1.5 text-sm">
+        <select value={platformId} onChange={(e) => setPlatformId(e.target.value)} aria-label="Platform to schedule on" className="rounded border border-border bg-background px-2 py-1.5 text-sm">
           <option value="">Platform…</option>
           {platforms.map((p) => (
             <option key={p.id} value={p.id}>{p.display_name}{p.supports_publishing ? '' : ' (manual-assist)'}</option>
@@ -80,6 +80,7 @@ export default function ScheduleBox({ content, onScheduled }) {
           type="datetime-local"
           value={when}
           onChange={(e) => setWhen(e.target.value)}
+          aria-label="Scheduled date and time"
           className="rounded border border-border bg-background px-2 py-1.5 text-sm"
         />
         <button

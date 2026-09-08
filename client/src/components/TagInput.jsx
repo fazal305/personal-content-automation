@@ -44,6 +44,7 @@ export default function TagInput({ value = [], onChange }) {
           setDraft('');
         }}
         placeholder={value.length === 0 ? 'Add tags…' : ''}
+        aria-label="Add tag"
         className="min-w-[6ch] flex-1 bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
       />
     </div>

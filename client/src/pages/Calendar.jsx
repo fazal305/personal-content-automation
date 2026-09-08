@@ -57,12 +57,12 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-lg font-semibold">Calendar</h1>
-        <div className="flex items-center gap-2 text-sm">
-          <button onClick={() => setView('month')} className={`rounded px-2 py-1 ${view === 'month' ? 'bg-surface-elevated text-text' : 'text-text-muted'}`}>Month</button>
-          <button onClick={() => setView('list')} className={`rounded px-2 py-1 ${view === 'list' ? 'bg-surface-elevated text-text' : 'text-text-muted'}`}>List</button>
+        <div className="flex items-center gap-2 text-sm" role="group" aria-label="Calendar view">
+          <button onClick={() => setView('month')} aria-pressed={view === 'month'} className={`rounded px-2 py-1 ${view === 'month' ? 'bg-surface-elevated text-text' : 'text-text-muted'}`}>Month</button>
+          <button onClick={() => setView('list')} aria-pressed={view === 'list'} className={`rounded px-2 py-1 ${view === 'list' ? 'bg-surface-elevated text-text' : 'text-text-muted'}`}>List</button>
         </div>
       </div>
 
@@ -77,37 +77,39 @@ export default function CalendarPage() {
             <button onClick={() => setAnchor(new Date())} className="text-xs text-text-muted hover:text-text">today</button>
           </div>
 
-          <div className="grid grid-cols-7 gap-px overflow-hidden rounded border border-border bg-border text-xs">
-            {WEEKDAYS.map((w) => (
-              <div key={w} className="bg-surface px-2 py-1 text-center text-text-muted">{w}</div>
-            ))}
-            {days.map((d) => {
-              const key = dateKey(d);
-              const inMonth = d.getMonth() === anchor.getMonth();
-              const dayJobs = jobsByDay[key] ?? [];
-              return (
-                <div key={key} className={`min-h-[92px] bg-surface p-1.5 ${inMonth ? '' : 'opacity-40'}`}>
-                  <div className="mb-1 text-text-muted">{d.getDate()}</div>
-                  <div className="space-y-1">
-                    {dayJobs.map((job) => (
-                      <button
-                        key={job.id}
-                        onClick={() => navigate(`/content/${job.content_id}`)}
-                        title={`${job.content_title} — ${job.platform_name}`}
-                        className="block w-full truncate rounded bg-surface-elevated px-1 py-0.5 text-left text-[11px] hover:border hover:border-accent/40"
-                      >
-                        {job.content_title}
-                      </button>
-                    ))}
+          <div className="overflow-x-auto rounded border border-border">
+            <div className="grid min-w-[640px] grid-cols-7 gap-px bg-border text-xs">
+              {WEEKDAYS.map((w) => (
+                <div key={w} className="bg-surface px-2 py-1 text-center text-text-muted">{w}</div>
+              ))}
+              {days.map((d) => {
+                const key = dateKey(d);
+                const inMonth = d.getMonth() === anchor.getMonth();
+                const dayJobs = jobsByDay[key] ?? [];
+                return (
+                  <div key={key} className={`min-h-[92px] bg-surface p-1.5 ${inMonth ? '' : 'opacity-40'}`}>
+                    <div className="mb-1 text-text-muted">{d.getDate()}</div>
+                    <div className="space-y-1">
+                      {dayJobs.map((job) => (
+                        <button
+                          key={job.id}
+                          onClick={() => navigate(`/content/${job.content_id}`)}
+                          title={`${job.content_title} — ${job.platform_name}`}
+                          className="block w-full truncate rounded bg-surface-elevated px-1 py-0.5 text-left text-[11px] hover:border hover:border-accent/40"
+                        >
+                          {job.content_title}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </>
       ) : (
-        <div className="overflow-hidden rounded border border-border">
-          <table className="w-full text-left text-sm">
+        <div className="overflow-x-auto rounded border border-border">
+          <table className="w-full min-w-[560px] text-left text-sm">
             <thead className="bg-surface text-xs uppercase tracking-wide text-text-muted">
               <tr>
                 <th className="px-3 py-2 font-medium">When</th>

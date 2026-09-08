@@ -30,7 +30,7 @@ export default function Library() {
   }, [status, pillarId, q]);
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-lg font-semibold">Content Library</h1>
         <button
@@ -46,15 +46,16 @@ export default function Library() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search title, hook, body…"
-          className="w-64 rounded border border-border bg-surface px-3 py-1.5 text-sm outline-none focus-visible:border-accent"
+          aria-label="Search content"
+          className="w-full sm:w-64 rounded border border-border bg-surface px-3 py-1.5 text-sm outline-none focus-visible:border-accent"
         />
-        <select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded border border-border bg-surface px-2 py-1.5 text-sm">
+        <select value={status} onChange={(e) => setStatus(e.target.value)} aria-label="Filter by status" className="rounded border border-border bg-surface px-2 py-1.5 text-sm">
           <option value="">All statuses</option>
           {LIFECYCLE.map((s) => (
             <option key={s} value={s}>{STATUS_LABEL[s]}</option>
           ))}
         </select>
-        <select value={pillarId} onChange={(e) => setPillarId(e.target.value)} className="rounded border border-border bg-surface px-2 py-1.5 text-sm">
+        <select value={pillarId} onChange={(e) => setPillarId(e.target.value)} aria-label="Filter by pillar" className="rounded border border-border bg-surface px-2 py-1.5 text-sm">
           <option value="">All pillars</option>
           {pillars.map((p) => (
             <option key={p.id} value={p.id}>{p.name}</option>
@@ -64,8 +65,8 @@ export default function Library() {
 
       {error && <div className="mb-4 text-sm text-danger">{error}</div>}
 
-      <div className="overflow-hidden rounded border border-border">
-        <table className="w-full text-left text-sm">
+      <div className="overflow-x-auto rounded border border-border">
+        <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="bg-surface text-xs uppercase tracking-wide text-text-muted">
             <tr>
               <th className="px-3 py-2 font-medium">Title</th>

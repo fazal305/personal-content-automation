@@ -63,45 +63,47 @@ export default function Ideas() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl p-8">
+    <div className="mx-auto max-w-3xl p-4 sm:p-8">
       <h1 className="mb-1 text-lg font-semibold">Ideas</h1>
       <p className="mb-6 text-sm text-text-muted">Fast capture. You can fill everything else in later, in the editor.</p>
 
-      <form onSubmit={handleSubmit} className="mb-10 space-y-3 rounded border border-border bg-surface p-4">
+      <form onSubmit={handleSubmit} aria-label="Capture a new idea" className="mb-10 space-y-3 rounded border border-border bg-surface p-4">
         <input
           autoFocus
           value={form.title}
           onChange={(e) => set('title', e.target.value)}
           placeholder="What's the idea? (title)"
+          aria-label="Idea title"
           className="w-full rounded border border-border bg-background px-3 py-2 text-sm text-text outline-none focus-visible:border-accent"
         />
         <input
           value={form.hook}
           onChange={(e) => set('hook', e.target.value)}
           placeholder="Hook — the one line that makes someone stop scrolling"
+          aria-label="Hook"
           className="w-full rounded border border-border bg-background px-3 py-2 text-sm text-text outline-none focus-visible:border-accent"
         />
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <select value={form.pillar_id} onChange={(e) => set('pillar_id', e.target.value)} className="rounded border border-border bg-background px-2 py-2 text-sm">
+          <select value={form.pillar_id} onChange={(e) => set('pillar_id', e.target.value)} aria-label="Content pillar" className="rounded border border-border bg-background px-2 py-2 text-sm">
             <option value="">Pillar…</option>
             {pillars.map((p) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
           </select>
-          <select value={form.target_platform} onChange={(e) => set('target_platform', e.target.value)} className="rounded border border-border bg-background px-2 py-2 text-sm">
+          <select value={form.target_platform} onChange={(e) => set('target_platform', e.target.value)} aria-label="Target platform" className="rounded border border-border bg-background px-2 py-2 text-sm">
             <option value="">Platform…</option>
             {platforms.map((p) => (
               <option key={p.id} value={p.slug}>{p.display_name}</option>
             ))}
           </select>
-          <select value={form.content_type} onChange={(e) => set('content_type', e.target.value)} className="rounded border border-border bg-background px-2 py-2 text-sm">
+          <select value={form.content_type} onChange={(e) => set('content_type', e.target.value)} aria-label="Content type" className="rounded border border-border bg-background px-2 py-2 text-sm">
             <option value="">Type…</option>
             {CONTENT_TYPES.map((t) => (
               <option key={t} value={t}>{t}</option>
             ))}
           </select>
-          <select value={form.priority} onChange={(e) => set('priority', e.target.value)} className="rounded border border-border bg-background px-2 py-2 text-sm">
+          <select value={form.priority} onChange={(e) => set('priority', e.target.value)} aria-label="Priority" className="rounded border border-border bg-background px-2 py-2 text-sm">
             {PRIORITIES.map((p) => (
               <option key={p} value={p}>{p}</option>
             ))}
@@ -114,12 +116,14 @@ export default function Ideas() {
           value={form.source_url}
           onChange={(e) => set('source_url', e.target.value)}
           placeholder="Reference URL (optional)"
+          aria-label="Reference URL"
           className="w-full rounded border border-border bg-background px-3 py-2 text-sm text-text outline-none focus-visible:border-accent"
         />
         <textarea
           value={form.notes}
           onChange={(e) => set('notes', e.target.value)}
           placeholder="Notes (optional)"
+          aria-label="Notes"
           rows={2}
           className="w-full rounded border border-border bg-background px-3 py-2 text-sm text-text outline-none focus-visible:border-accent"
         />

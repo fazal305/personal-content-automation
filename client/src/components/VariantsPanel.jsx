@@ -74,6 +74,7 @@ export default function VariantsPanel({ content }) {
                     value={draft}
                     onChange={(e) => setDrafts((d) => ({ ...d, [platform.id]: e.target.value }))}
                     rows={3}
+                    aria-label={`${platform.display_name} version`}
                     className="w-full rounded border border-border bg-background px-2 py-1.5 text-xs outline-none focus-visible:border-accent"
                   />
                   <div className="mt-1 flex gap-2">

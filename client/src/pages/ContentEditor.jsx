@@ -85,10 +85,10 @@ export default function ContentEditor() {
     navigate('/library');
   }
 
-  if (loading) return <div className="p-8 text-sm text-text-muted">Loading…</div>;
+  if (loading) return <div className="p-4 text-sm text-text-muted sm:p-8">Loading…</div>;
 
   return (
-    <div className="mx-auto max-w-2xl p-8">
+    <div className="mx-auto max-w-2xl p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between">
         <Link to="/library" className="text-sm text-text-muted hover:text-text">← Back to library</Link>
         <div className="flex items-center gap-2">
@@ -101,12 +101,14 @@ export default function ContentEditor() {
         value={form.title}
         onChange={(e) => set('title', e.target.value)}
         placeholder="Title"
+        aria-label="Title"
         className="mb-3 w-full rounded border border-border bg-surface px-3 py-2 text-base font-medium outline-none focus-visible:border-accent"
       />
       <input
         value={form.hook}
         onChange={(e) => set('hook', e.target.value)}
         placeholder="Hook"
+        aria-label="Hook"
         className="mb-3 w-full rounded border border-border bg-surface px-3 py-2 text-sm outline-none focus-visible:border-accent"
       />
       {!isNew && (
@@ -132,6 +134,7 @@ export default function ContentEditor() {
         value={form.body}
         onChange={(e) => set('body', e.target.value)}
         placeholder="Body"
+        aria-label="Body"
         rows={8}
         className="mb-3 w-full rounded border border-border bg-surface px-3 py-2 text-sm outline-none focus-visible:border-accent"
       />
@@ -140,35 +143,37 @@ export default function ContentEditor() {
           value={form.cta}
           onChange={(e) => set('cta', e.target.value)}
           placeholder="CTA"
+          aria-label="Call to action"
           className="rounded border border-border bg-surface px-3 py-2 text-sm outline-none focus-visible:border-accent"
         />
         <input
           value={form.hashtags}
           onChange={(e) => set('hashtags', e.target.value)}
           placeholder="Hashtags"
+          aria-label="Hashtags"
           className="rounded border border-border bg-surface px-3 py-2 text-sm outline-none focus-visible:border-accent"
         />
       </div>
 
       <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <select value={form.status} onChange={(e) => set('status', e.target.value)} className="rounded border border-border bg-surface px-2 py-2 text-sm">
+        <select value={form.status} onChange={(e) => set('status', e.target.value)} aria-label="Status" className="rounded border border-border bg-surface px-2 py-2 text-sm">
           {LIFECYCLE.map((s) => (
             <option key={s} value={s}>{STATUS_LABEL[s]}</option>
           ))}
         </select>
-        <select value={form.pillar_id} onChange={(e) => set('pillar_id', e.target.value)} className="rounded border border-border bg-surface px-2 py-2 text-sm">
+        <select value={form.pillar_id} onChange={(e) => set('pillar_id', e.target.value)} aria-label="Content pillar" className="rounded border border-border bg-surface px-2 py-2 text-sm">
           <option value="">Pillar…</option>
           {pillars.map((p) => (
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
         </select>
-        <select value={form.target_platform ?? ''} onChange={(e) => set('target_platform', e.target.value)} className="rounded border border-border bg-surface px-2 py-2 text-sm">
+        <select value={form.target_platform ?? ''} onChange={(e) => set('target_platform', e.target.value)} aria-label="Target platform" className="rounded border border-border bg-surface px-2 py-2 text-sm">
           <option value="">Platform…</option>
           {platforms.map((p) => (
             <option key={p.id} value={p.slug}>{p.display_name}</option>
           ))}
         </select>
-        <select value={form.content_type ?? ''} onChange={(e) => set('content_type', e.target.value)} className="rounded border border-border bg-surface px-2 py-2 text-sm">
+        <select value={form.content_type ?? ''} onChange={(e) => set('content_type', e.target.value)} aria-label="Content type" className="rounded border border-border bg-surface px-2 py-2 text-sm">
           <option value="">Type…</option>
           {CONTENT_TYPES.map((t) => (
             <option key={t} value={t}>{t}</option>
@@ -176,7 +181,7 @@ export default function ContentEditor() {
         </select>
       </div>
 
-      <select value={form.priority} onChange={(e) => set('priority', e.target.value)} className="mb-3 rounded border border-border bg-surface px-2 py-2 text-sm">
+      <select value={form.priority} onChange={(e) => set('priority', e.target.value)} aria-label="Priority" className="mb-3 rounded border border-border bg-surface px-2 py-2 text-sm">
         {PRIORITIES.map((p) => (
           <option key={p} value={p}>{p} priority</option>
         ))}
@@ -193,12 +198,14 @@ export default function ContentEditor() {
         value={form.source_url ?? ''}
         onChange={(e) => set('source_url', e.target.value)}
         placeholder="Reference URL"
+        aria-label="Reference URL"
         className="mb-3 w-full rounded border border-border bg-surface px-3 py-2 text-sm outline-none focus-visible:border-accent"
       />
       <textarea
         value={form.notes ?? ''}
         onChange={(e) => set('notes', e.target.value)}
         placeholder="Notes"
+        aria-label="Notes"
         rows={2}
         className="mb-4 w-full rounded border border-border bg-surface px-3 py-2 text-sm outline-none focus-visible:border-accent"
       />

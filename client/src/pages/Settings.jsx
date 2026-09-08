@@ -14,7 +14,7 @@ const CONFIG_FIELDS = [
 
 export default function Settings() {
   return (
-    <div className="mx-auto max-w-2xl p-8">
+    <div className="mx-auto max-w-2xl p-4 sm:p-8">
       <h1 className="mb-6 text-lg font-semibold">Settings</h1>
       <PlatformConnections />
       <BrandConfig />
@@ -66,6 +66,7 @@ function PlatformConnections() {
                 <button
                   onClick={() => handleTest(p.slug)}
                   disabled={testing === p.slug}
+                  aria-label={`Test ${p.display_name} connection`}
                   className="rounded border border-border px-2 py-1 text-xs text-text-muted hover:text-text disabled:opacity-50"
                 >
                   {testing === p.slug ? 'Testing…' : 'Test connection'}
@@ -131,6 +132,7 @@ function BrandConfig() {
             value={form[field] ?? ''}
             onChange={(e) => set(field, e.target.value)}
             placeholder={label}
+            aria-label={label}
             className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent"
           />
         ))}

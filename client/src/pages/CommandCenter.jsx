@@ -45,15 +45,15 @@ export default function CommandCenter() {
 
   if (error) {
     return (
-      <div className="p-8 text-sm text-danger">
+      <div className="p-4 text-sm text-danger sm:p-8">
         Could not reach the API — is the server running? ({error})
       </div>
     );
   }
 
   return (
-    <div className="p-8">
-      <header className="mb-8 flex items-center justify-between">
+    <div className="p-4 sm:p-8">
+      <header className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-lg font-semibold">Command Center</h1>
           <p className="text-sm text-text-muted">
@@ -78,7 +78,7 @@ export default function CommandCenter() {
 
       <section className="mb-8">
         <h2 className="mb-3 text-sm font-medium text-text-muted">Content Pipeline</h2>
-        <div className="grid grid-cols-6 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
           {STAGES.map(([key, label]) => (
             <div key={key} className="rounded border border-border bg-surface px-3 py-3">
               <div className="text-2xl font-semibold tabular-nums">{counts?.[key] ?? '—'}</div>
@@ -88,7 +88,7 @@ export default function CommandCenter() {
         </div>
       </section>
 
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <section>
           <h2 className="mb-3 text-sm font-medium text-text-muted">Automation Health</h2>
           {health?.scheduler && (

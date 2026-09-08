@@ -17,19 +17,19 @@ export default function Analytics() {
   if (!data) return <div className="p-8 text-sm text-text-muted">Loading…</div>;
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <h1 className="mb-1 text-lg font-semibold">Analytics</h1>
       <p className="mb-6 text-sm text-text-muted">
         Real metrics only, from platforms that actually offer an analytics API — nothing here is estimated or fabricated.
       </p>
 
-      <div className="mb-8 grid grid-cols-3 gap-3">
+      <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Stat label="Total published" value={data.totalPublished} />
         <Stat label="Platforms tracked" value={data.byPlatform.filter((p) => p.supports_analytics).length} />
         <Stat label="Posts with real metrics" value={data.hasAnyRealData ? data.topContent.length : 0} />
       </div>
 
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <section>
           <h2 className="mb-3 text-sm font-medium text-text-muted">Published by Platform</h2>
           <div className="rounded border border-border bg-surface">
@@ -66,8 +66,8 @@ export default function Analytics() {
             Not available through connected API — no platform with real analytics has been synced yet. Connect Mastodon or Bluesky in Settings and publish something outside dry-run mode.
           </div>
         ) : (
-          <div className="overflow-hidden rounded border border-border">
-            <table className="w-full text-left text-sm">
+          <div className="overflow-x-auto rounded border border-border">
+            <table className="w-full min-w-[560px] text-left text-sm">
               <thead className="bg-surface text-xs uppercase tracking-wide text-text-muted">
                 <tr>
                   <th className="px-3 py-2 font-medium">Content</th>

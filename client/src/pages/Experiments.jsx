@@ -34,10 +34,10 @@ export default function Experiments() {
   })).filter((g) => g.items.length > 0);
 
   return (
-    <div className="mx-auto max-w-3xl p-8">
+    <div className="mx-auto max-w-3xl p-4 sm:p-8">
       <div className="mb-1 flex items-center justify-between">
         <h1 className="text-lg font-semibold">Experiment Lab</h1>
-        <button onClick={() => setShowForm((s) => !s)} className="rounded border border-border px-2 py-1 text-xs text-text-muted hover:text-text">
+        <button onClick={() => setShowForm((s) => !s)} aria-expanded={showForm} className="rounded border border-border px-2 py-1 text-xs text-text-muted hover:text-text">
           {showForm ? 'Cancel' : '+ New experiment'}
         </button>
       </div>
@@ -46,20 +46,20 @@ export default function Experiments() {
       </p>
 
       {showForm && (
-        <form onSubmit={handleCreate} className="mb-6 space-y-2 rounded border border-border bg-surface p-4">
-          <input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Experiment name" className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
-          <input value={form.goal} onChange={(e) => setForm((f) => ({ ...f, goal: e.target.value }))} placeholder="Goal" className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
-          <div className="grid grid-cols-2 gap-2">
-            <input value={form.trigger_desc} onChange={(e) => setForm((f) => ({ ...f, trigger_desc: e.target.value }))} placeholder="Trigger" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
-            <input value={form.input_desc} onChange={(e) => setForm((f) => ({ ...f, input_desc: e.target.value }))} placeholder="Input" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
-            <input value={form.processing_desc} onChange={(e) => setForm((f) => ({ ...f, processing_desc: e.target.value }))} placeholder="Processing" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
-            <input value={form.output_desc} onChange={(e) => setForm((f) => ({ ...f, output_desc: e.target.value }))} placeholder="Output" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
-            <input value={form.api_used} onChange={(e) => setForm((f) => ({ ...f, api_used: e.target.value }))} placeholder="API used" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
-            <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))} className="rounded border border-border bg-background px-3 py-2 text-sm">
+        <form onSubmit={handleCreate} aria-label="New experiment" className="mb-6 space-y-2 rounded border border-border bg-surface p-4">
+          <input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Experiment name" aria-label="Experiment name" className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
+          <input value={form.goal} onChange={(e) => setForm((f) => ({ ...f, goal: e.target.value }))} placeholder="Goal" aria-label="Goal" className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <input value={form.trigger_desc} onChange={(e) => setForm((f) => ({ ...f, trigger_desc: e.target.value }))} placeholder="Trigger" aria-label="Trigger" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
+            <input value={form.input_desc} onChange={(e) => setForm((f) => ({ ...f, input_desc: e.target.value }))} placeholder="Input" aria-label="Input" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
+            <input value={form.processing_desc} onChange={(e) => setForm((f) => ({ ...f, processing_desc: e.target.value }))} placeholder="Processing" aria-label="Processing" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
+            <input value={form.output_desc} onChange={(e) => setForm((f) => ({ ...f, output_desc: e.target.value }))} placeholder="Output" aria-label="Output" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
+            <input value={form.api_used} onChange={(e) => setForm((f) => ({ ...f, api_used: e.target.value }))} placeholder="API used" aria-label="API used" className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
+            <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))} aria-label="Status" className="rounded border border-border bg-background px-3 py-2 text-sm">
               {STATUS_ORDER.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
             </select>
           </div>
-          <textarea value={form.learnings} onChange={(e) => setForm((f) => ({ ...f, learnings: e.target.value }))} placeholder="What I learned" rows={2} className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
+          <textarea value={form.learnings} onChange={(e) => setForm((f) => ({ ...f, learnings: e.target.value }))} placeholder="What I learned" aria-label="What I learned" rows={2} className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:border-accent" />
           <button type="submit" className="rounded bg-accent px-3 py-1.5 text-sm font-medium text-background">Save experiment</button>
         </form>
       )}
@@ -70,7 +70,7 @@ export default function Experiments() {
           <div className="space-y-2">
             {group.items.map((exp) => (
               <div key={exp.id} className="rounded border border-border bg-surface px-3 py-2.5 text-sm">
-                <button onClick={() => setExpanded(expanded === exp.id ? null : exp.id)} className="flex w-full items-center justify-between text-left">
+                <button onClick={() => setExpanded(expanded === exp.id ? null : exp.id)} aria-expanded={expanded === exp.id} className="flex w-full items-center justify-between text-left">
                   <span className="font-medium">{exp.name}</span>
                   <span className={`rounded border px-1.5 py-0.5 font-mono text-[11px] uppercase ${STATUS_COLOR[exp.status]}`}>{STATUS_LABEL[exp.status]}</span>
                 </button>

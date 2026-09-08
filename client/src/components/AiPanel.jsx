@@ -83,7 +83,7 @@ export default function AiPanel({ content, onApplyDraft, onApplyBody }) {
         <button onClick={handleGenerateDraft} disabled={busy === 'draft'} className="rounded border border-border px-2 py-1.5 text-xs text-text-muted hover:text-text disabled:opacity-50">
           {busy === 'draft' ? 'Generating…' : 'Generate draft from idea'}
         </button>
-        <select value={mode} onChange={(e) => setMode(e.target.value)} className="rounded border border-border bg-background px-2 py-1.5 text-xs">
+        <select value={mode} onChange={(e) => setMode(e.target.value)} aria-label="Rewrite mode" className="rounded border border-border bg-background px-2 py-1.5 text-xs">
           {REWRITE_MODES.map(([v, l]) => (
             <option key={v} value={v}>{l}</option>
           ))}
