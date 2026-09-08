@@ -6,6 +6,7 @@ import { miscRouter } from './routes/misc.js';
 import { jobsRouter } from './routes/jobs.js';
 import { aiRouter } from './routes/ai.js';
 import { analyticsRouter } from './routes/analytics.js';
+import { intelligenceRouter } from './routes/intelligence.js';
 
 export function createApp() {
   const app = express();
@@ -18,6 +19,7 @@ export function createApp() {
   app.use('/api', jobsRouter);
   app.use('/api', aiRouter);
   app.use('/api', analyticsRouter);
+  app.use('/api', intelligenceRouter);
 
   app.use((req, res) => res.status(404).json({ error: 'not_found' }));
 

@@ -56,4 +56,5 @@ export const api = {
   deleteVariant: (contentId, platformId) => request(`/content/${contentId}/variants/${platformId}`, { method: 'DELETE' }),
   analyticsOverview: () => request('/analytics/overview'),
   contentAnalytics: (contentId) => request(`/analytics/content/${contentId}`),
+  intelligenceInsights: () => request('/intelligence/insights'),
 };

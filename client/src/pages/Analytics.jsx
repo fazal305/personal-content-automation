@@ -4,11 +4,13 @@ import { api } from '../lib/api';
 
 export default function Analytics() {
   const [data, setData] = useState(null);
+  const [insights, setInsights] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     api.analyticsOverview().then(setData).catch((e) => setError(e.message));
+    api.intelligenceInsights().then(setInsights).catch(() => {});
   }, []);
 
   if (error) return <div className="p-8 text-sm text-danger">{error}</div>;
@@ -50,7 +52,7 @@ export default function Analytics() {
             {data.byPillar.map((p) => (
               <div key={p.pillar} className="flex items-center justify-between border-b border-border px-3 py-2 text-sm last:border-b-0">
                 <span>{p.pillar}</span>
-                <span className="text-xs text-text-muted">{p.n}</span>
+                <span className="text-xs text-text-muted">{p.n} · {Math.round((p.n / data.totalPublished) * 100)}%</span>
               </div>
             ))}
           </div>
@@ -89,6 +91,28 @@ export default function Analytics() {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+      </section>
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-sm font-medium text-text-muted">Content Intelligence</h2>
+        {!insights ? (
+          <div className="rounded border border-border bg-surface px-3 py-4 text-sm text-text-muted">Loading…</div>
+        ) : !insights.ready ? (
+          <div className="rounded border border-border bg-surface px-3 py-6 text-center text-sm text-text-muted">
+            {insights.message}
+          </div>
+        ) : (
+          <div className="rounded border border-border bg-surface p-3">
+            <ul className="space-y-2 text-sm">
+              {insights.insights.map((ins, i) => (
+                <li key={i} className="text-text-muted">
+                  <span className="text-text">→</span> {ins.text}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-xs text-text-muted">Based on {insights.sampleSize} posts with real analytics. Description of what happened, not a prediction.</p>
           </div>
         )}
       </section>
