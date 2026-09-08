@@ -29,9 +29,15 @@ export default function ContentEditor() {
 
   function reload() {
     return api.getContent(id).then((item) => {
+      // Null-coalesce every text field: DB columns are nullable, but a
+      // controlled input's value must never be null (React warns and the
+      // input silently becomes uncontrolled).
+      const textFields = ['title', 'hook', 'body', 'cta', 'hashtags', 'content_type', 'target_platform', 'source_url', 'notes'];
+      const normalized = Object.fromEntries(textFields.map((f) => [f, item[f] ?? '']));
       setForm({
         ...EMPTY,
         ...item,
+        ...normalized,
         pillar_id: item.pillar_id ?? '',
         tags: (item.tags || []).map((t) => t.name),
       });
