@@ -2,6 +2,7 @@
 // connecting any real accounts. Safe to run repeatedly (idempotent per title).
 import 'dotenv/config';
 import { db, logEvent } from './index.js';
+import { seedDefaultExperiments } from './seedExperiments.js';
 
 const pillars = [
   { name: 'Build in Public', description: 'Progress updates on projects I\'m building.', color: '--color-accent' },
@@ -70,5 +71,7 @@ for (const c of demoContent) {
     logEvent({ event_type: 'CONTENT_CREATED', entity_type: 'content', entity_id: info.lastInsertRowid, message: `${c.title} (demo seed)` });
   }
 }
+
+seedDefaultExperiments();
 
 console.log('[seedDemo] demo data ready.');

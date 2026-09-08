@@ -99,3 +99,38 @@ miscRouter.patch('/config', (req, res) => {
 miscRouter.get('/experiments', (req, res) => {
   res.json(db.prepare('SELECT * FROM experiments ORDER BY created_at DESC').all());
 });
+
+const EXPERIMENT_FIELDS = ['name', 'goal', 'trigger_desc', 'input_desc', 'processing_desc', 'output_desc', 'api_used', 'automation_used', 'status', 'learnings'];
+const EXPERIMENT_STATUSES = ['planned', 'in_progress', 'working', 'abandoned'];
+
+miscRouter.post('/experiments', (req, res) => {
+  if (!req.body.name) return res.status(400).json({ error: 'name_required' });
+  const values = EXPERIMENT_FIELDS.map((f) => req.body[f] ?? (f === 'status' ? 'planned' : null));
+  const result = db.prepare(`
+    INSERT INTO experiments (${EXPERIMENT_FIELDS.join(', ')})
+    VALUES (${EXPERIMENT_FIELDS.map(() => '?').join(', ')})
+  `).run(...values);
+  res.status(201).json(db.prepare('SELECT * FROM experiments WHERE id = ?').get(result.lastInsertRowid));
+});
+
+miscRouter.patch('/experiments/:id', (req, res) => {
+  const existing = db.prepare('SELECT * FROM experiments WHERE id = ?').get(req.params.id);
+  if (!existing) return res.status(404).json({ error: 'not_found' });
+
+  const updates = [];
+  const params = [];
+  for (const f of EXPERIMENT_FIELDS) {
+    if (req.body[f] !== undefined) {
+      if (f === 'status' && !EXPERIMENT_STATUSES.includes(req.body.status)) {
+        return res.status(400).json({ error: 'invalid_status', allowed: EXPERIMENT_STATUSES });
+      }
+      updates.push(`${f} = ?`);
+      params.push(req.body[f]);
+    }
+  }
+  if (updates.length === 0) return res.json(existing);
+  updates.push(`updated_at = datetime('now')`);
+  params.push(req.params.id);
+  db.prepare(`UPDATE experiments SET ${updates.join(', ')} WHERE id = ?`).run(...params);
+  res.json(db.prepare('SELECT * FROM experiments WHERE id = ?').get(req.params.id));
+});

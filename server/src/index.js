@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { createApp } from './app.js';
 import { startScheduler } from './jobs/scheduler.js';
 import { seedDefaultRules } from './jobs/rules.js';
+import { seedDefaultExperiments } from './db/seedExperiments.js';
 
 const port = process.env.PORT || 4000;
 const app = createApp();
@@ -11,6 +12,7 @@ app.listen(port, () => {
 });
 
 seedDefaultRules();
+seedDefaultExperiments();
 
 // Ticks every 60s, checking for scheduled_jobs whose scheduled_for time has arrived
 // and evaluating pollable automation rules (e.g. stale-in-review reminders).

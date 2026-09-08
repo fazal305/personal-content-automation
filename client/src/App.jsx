@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import NavShell from './components/NavShell.jsx';
-import ComingSoon from './components/ComingSoon.jsx';
 import CommandCenter from './pages/CommandCenter.jsx';
 import Ideas from './pages/Ideas.jsx';
 import Library from './pages/Library.jsx';
@@ -9,6 +8,7 @@ import CalendarPage from './pages/Calendar.jsx';
 import Automation from './pages/Automation.jsx';
 import Settings from './pages/Settings.jsx';
 import Analytics from './pages/Analytics.jsx';
+import Experiments from './pages/Experiments.jsx';
 
 export default function App() {
   return (
@@ -22,10 +22,7 @@ export default function App() {
         <Route path="calendar" element={<CalendarPage />} />
         <Route path="automation" element={<Automation />} />
         <Route path="analytics" element={<Analytics />} />
-        <Route
-          path="experiments"
-          element={<ComingSoon title="Experiment Lab" phase="Phase 9 — Experiment Lab" description="Documented automation experiments: trigger, input, processing, output, learnings." />}
-        />
+        <Route path="experiments" element={<Experiments />} />
         <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>

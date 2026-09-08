@@ -57,4 +57,7 @@ export const api = {
   analyticsOverview: () => request('/analytics/overview'),
   contentAnalytics: (contentId) => request(`/analytics/content/${contentId}`),
   intelligenceInsights: () => request('/intelligence/insights'),
+  experiments: () => request('/experiments'),
+  createExperiment: (data) => request('/experiments', { method: 'POST', body: JSON.stringify(data) }),
+  updateExperiment: (id, data) => request(`/experiments/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
 };
