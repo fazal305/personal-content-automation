@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { api } from '../lib/api';
+import { api, withSlowNotice } from '../lib/api';
 import { LIFECYCLE, STATUS_LABEL, CONTENT_TYPES, PRIORITIES } from '../lib/constants';
 import StatusBadge from '../components/StatusBadge';
 import TagInput from '../components/TagInput';
@@ -26,6 +26,7 @@ export default function ContentEditor() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [dirty, setDirty] = useState(false);
+  const [slow, setSlow] = useState(false);
 
   function reload() {
     return api.getContent(id).then((item) => {
@@ -50,10 +51,11 @@ export default function ContentEditor() {
     api.pillars().then(setPillars).catch(() => {});
     api.platforms().then(setPlatforms).catch(() => {});
     if (!isNew) {
-      reload().catch((e) => {
+      const loaded = reload().catch((e) => {
         setError(e.message);
         setLoading(false);
       });
+      withSlowNotice(loaded, () => setSlow(true)).finally(() => setSlow(false));
     }
   }, [id, isNew]);
 
@@ -91,7 +93,13 @@ export default function ContentEditor() {
     navigate('/library');
   }
 
-  if (loading) return <div className="p-4 text-sm text-text-muted sm:p-8">Loading…</div>;
+  if (loading) {
+    return (
+      <div className="p-4 text-sm text-text-muted sm:p-8">
+        Loading…{slow && ' Still working — this is taking longer than usual.'}
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-2xl p-4 sm:p-8">

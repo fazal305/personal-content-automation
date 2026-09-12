@@ -1,20 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api';
+import { api, withSlowNotice } from '../lib/api';
 
 export default function Analytics() {
   const [data, setData] = useState(null);
   const [insights, setInsights] = useState(null);
   const [error, setError] = useState(null);
+  const [slow, setSlow] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.analyticsOverview().then(setData).catch((e) => setError(e.message));
+    const loaded = api.analyticsOverview().then(setData).catch((e) => setError(e.message));
+    withSlowNotice(loaded, () => setSlow(true)).finally(() => setSlow(false));
     api.intelligenceInsights().then(setInsights).catch(() => {});
   }, []);
 
   if (error) return <div className="p-8 text-sm text-danger">{error}</div>;
-  if (!data) return <div className="p-8 text-sm text-text-muted">Loading…</div>;
+  if (!data) {
+    return (
+      <div className="p-8 text-sm text-text-muted">
+        Loading…{slow && ' Still working — this is taking longer than usual.'}
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-8">

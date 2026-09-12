@@ -13,6 +13,14 @@ async function request(path, options = {}) {
   return res.json();
 }
 
+// Calls `onSlow` if `promise` hasn't settled after `delay` ms, so callers can
+// surface a "still working…" message on a slow connection without changing
+// how the request itself resolves, rejects, or is error-handled.
+export function withSlowNotice(promise, onSlow, delay = 5500) {
+  const timer = setTimeout(onSlow, delay);
+  return promise.finally(() => clearTimeout(timer));
+}
+
 export const api = {
   health: () => request('/health'),
   pipelineCounts: () => request('/content/pipeline-counts'),

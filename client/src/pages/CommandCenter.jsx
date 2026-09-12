@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../lib/api';
+import { api, withSlowNotice } from '../lib/api';
 
 const STAGES = [
   ['idea', 'Ideas'],
@@ -17,9 +17,11 @@ export default function CommandCenter() {
   const [health, setHealth] = useState(null);
   const [error, setError] = useState(null);
   const [running, setRunning] = useState(false);
+  const [slow, setSlow] = useState(false);
 
   function refresh() {
-    return Promise.all([api.pipelineCounts(), api.platforms(), api.events({ limit: 8 }), api.health()])
+    setSlow(false);
+    const loaded = Promise.all([api.pipelineCounts(), api.platforms(), api.events({ limit: 8 }), api.health()])
       .then(([c, p, e, h]) => {
         setCounts(c);
         setPlatforms(p);
@@ -27,6 +29,7 @@ export default function CommandCenter() {
         setHealth(h);
       })
       .catch((err) => setError(err.message));
+    return withSlowNotice(loaded, () => setSlow(true)).finally(() => setSlow(false));
   }
 
   useEffect(() => {
@@ -75,6 +78,10 @@ export default function CommandCenter() {
           </button>
         </div>
       </header>
+
+      {slow && (
+        <p className="mb-4 text-sm text-text-muted">Still working… the server is taking longer than usual to respond.</p>
+      )}
 
       <section className="mb-8">
         <h2 className="mb-3 text-sm font-medium text-text-muted">Content Pipeline</h2>
