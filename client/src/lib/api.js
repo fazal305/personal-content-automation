@@ -1,13 +1,17 @@
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+const API_KEY = import.meta.env.VITE_API_KEY || '';
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': API_KEY,
+    },
     ...options,
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new Error(body.error || `Request failed: ${res.status}`);
+    throw new Error(body.message || body.error || `Request failed: ${res.status}`);
   }
   if (res.status === 204) return null;
   return res.json();
