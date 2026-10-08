@@ -12,5 +12,5 @@
     "dev:client": "npm run dev --workspace client",
     "db:migrate": "npm run db:migrate --workspace server"
   },
-  "license": "MIT"
+  "license": "PolyForm-Noncommercial-1.0.0"
 }
