@@ -7,10 +7,10 @@ build/
 .env.local
 
 # runtime data — never commit real personal content or tokens
-data/*.db
-data/*.db-journal
-data/*.db-wal
-data/*.db-shm
+**/data/*.db
+**/data/*.db-journal
+**/data/*.db-wal
+**/data/*.db-shm
 logs/
 tokens/
 uploads/
